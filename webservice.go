@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"log"
+	"strconv"
 )
 type apartmentRequest struct{
 	Name string `form:"name" json:"name"`
@@ -20,30 +21,48 @@ func main(){
 func getApartments(c *gin.Context){
 	apartments := getApartment()
 	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	c.JSON(200, gin.H{"apartments":apartments})
-	// c.String(200, "GET METHOD")
+		// 	log.Fatal(err)
+		// }
+		c.JSON(200, gin.H{"apartments":apartments})
+		// c.String(200, "GET METHOD")
 
-}
-
-func addApartment(c *gin.Context){
-	var req apartmentRequest
-	if err := c.ShouldBind(&req); err != nil{
-		log.Fatal(err)
 	}
-	id := saveApartment(req.Name, req.Address)
-	if id != 0 {
-		c.JSON(200, gin.H{"message":"apartment has been added"})
+
+	func addApartment(c *gin.Context){
+		var req apartmentRequest
+		if err := c.ShouldBind(&req); err != nil{
+			log.Fatal(err)
+		}
+		id := saveApartment(req.Name, req.Address)
+		if id != 0 {
+			c.JSON(200, gin.H{"message":"apartment has been added"})
+		}
 	}
-	// c.String(200, req.Name)
-	// c.String(200, "ADD METHOD")
-}
 
-func editApartment(c *gin.Context){
-	c.JSON(200, gin.H{"message": c.Param("apartmentId")})
-}
+	func editApartment(c *gin.Context){
+		var req apartmentRequest
+		if err := c.ShouldBind(&req); err != nil{
+			log.Fatal(err)
+		}
+		apartmentId, err := strconv.Atoi(c.Param("apartmentId"))
+		if err != nil{
+			log.Fatal(err)
+		}
+		id := updateApartment(apartmentId, req.Name, req.Address)
 
-func deleteApartment(c *gin.Context){
-	c.JSON(200, gin.H{"message": c.Param("apartmentId")})
-}
+		if id != 0 {
+			c.JSON(200, gin.H{"message": "apartment has been updated"})
+		}
+	}
+
+	func deleteApartment(c *gin.Context){
+		apartmentId, err := strconv.Atoi(c.Param("apartmentId"))
+		if err != nil{
+			log.Fatal(err)
+		}
+		id := removeApartment(apartmentId)
+
+		if id != 0 {
+			c.JSON(200, gin.H{"message": "apartment has been deleted"})
+		}
+	}

@@ -60,7 +60,7 @@ func saveApartment(name, address string) (int){
 }
 
 func updateApartment(id int, name, address string) (int) {
-	res, err := db.Exec(`UPDATE books set name=$1, address=$2 where id=$3 RETURNING id`, name, address, id)
+	res, err := db.Exec(`UPDATE apartments set name=$1, address=$2 where id=$3 RETURNING id`, name, address, id)
 	if err != nil {
 		return 0
 	}
