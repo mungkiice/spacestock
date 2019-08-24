@@ -1,5 +1,11 @@
 package main
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+	"github.com/gin-gonic/gin"
+	"database/sql"
+	_ "github.com/lib/pq"
+)
 // Golang Specifics
 // 2.1 struct
 type Human struct {
@@ -14,13 +20,13 @@ func ChangeOriginalName(human *Human, to string){
 	human.Name = to
 }
 
-func main(){
+func anotherMain(){
 	john := Human{Name: "John Doe"}
 	ChangeName(john, "Jane Doe")
 
 	//What does the john.Name prints and why?
-    fmt.Printf("%s\n", john.Name)
-    // English
+	fmt.Printf("%s\n", john.Name)
+	// English
 	// the program will print "John Doe", 
 	// because the ChangeName function did not receive the original variable in the first place,
 	// it received only the value of the variable and then create a new variable inside the function with a new memory address to hold the value,
@@ -29,15 +35,20 @@ func main(){
 	// here's an example of how to change the original variable:
 
 	// Bahasa
-    // program akan mencetak "John Doe" karena ketika memanggil method ChangeName,
-    // method tersebut akan menginisiasi variabel baru untuk menampung nilai dari parameter yang dikirim dengan alamat memori yang berbeda dengan variabel awal,
-    // sehingga nilai yang berhasil diubah yaitu nilai dari variabel yang ada didalam method ChangeName,
-    // untuk mengubah nilai variabel diluar method diperlukan address/pointer dari variabel tersebut,
-    // sehingga method mengubah nilai di alamat memori dari variabel tersebut,
-    // berikut contoh cara untuk mengubah variabel aslinya:
-    
-    ChangeOriginalName(&john, "Jane Doe")
-    fmt.Printf("%s\n", john.Name)
-}
+	// program akan mencetak "John Doe" karena ketika memanggil method ChangeName,
+	// method tersebut akan menginisiasi variabel baru untuk menampung nilai dari parameter yang dikirim dengan alamat memori yang berbeda dengan variabel awal,
+	// sehingga nilai yang berhasil diubah yaitu nilai dari variabel yang ada didalam method ChangeName,
+	// untuk mengubah nilai variabel diluar method diperlukan address/pointer dari variabel tersebut,
+	// sehingga method mengubah nilai di alamat memori dari variabel tersebut,
+	// berikut contoh cara untuk mengubah variabel aslinya:
 
-// 2.2 Please setup a REST service for CRUD
+	ChangeOriginalName(&john, "Jane Doe")
+	fmt.Printf("%s\n", john.Name)
+}
+const (
+	host     = "localhost"
+	port     = 5432
+	user     = "postgres"
+	password = "your-password"
+	dbname   = "calhounio_demo"
+)
